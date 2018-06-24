@@ -3,15 +3,14 @@ function connect_to_db()
 {
 	$conn = false;
 	try {
-		$conn = mysqli_connect("localhost", "root", "", "docs");
+		$conn = mysqli_connect();
 	} catch (\Exception $e) {
-		$conn = mysqli_connect("db743985497.db.1and1.com", "dbo743985497", "docs%9919.PLACE", "db743985497");
+		$conn = mysqli_connect();
 	}
 	if($conn == false){
-		$conn = mysqli_connect("db743985497.db.1and1.com", "dbo743985497", "docs%9919.PLACE", "db743985497");
+		$conn = mysqli_connect();
 	}
 	return $conn;
 
 }
-//db743985497
  ?>
