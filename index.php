@@ -52,7 +52,6 @@ $conn = connect_to_db();
 			//read_contents($conn, "Programming");
 			createBottomWRAPPER();
 		 ?>
-		<div class="_upscroller">&Lambda;</div>
 	</body>
 	<?php
 		create_scripts();

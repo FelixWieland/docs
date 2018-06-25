@@ -1,17 +1,9 @@
-$(window).scroll(function() {
-	if ($(document).scrollTop() > 80) {
-		$('._navbar').addClass('_shrink');
-		$("._upscroller").fadeIn(200);
-	} else {
-		$('._navbar').removeClass('_shrink');
-		$("._upscroller").fadeOut(200);
-	}
-});
-$("._upscroller").click(function () {
-	$('html, body').animate({ scrollTop: 0 }, 300);
-});
 
-$("#_menu-id").click(function () {
+function click_upscroller_btn() {
+	$('html, body').animate({ scrollTop: 0 }, 300);
+}
+
+function click_menu_btn() {
 	$("#_menu-field-id").toggle();
 	$("._login_field").hide();
 
@@ -21,10 +13,9 @@ $("#_menu-id").click(function () {
 	else {
 		$("#_closer_of_all").hide();
 	}
+}
 
-});
-
-$("#_login-id").click(function () {
+function click_login_btn() {
 	$("._login_field").toggle();
 	$("#_menu-field-id").hide();
 
@@ -34,25 +25,20 @@ $("#_login-id").click(function () {
 	else {
 		$("#_closer_of_all").hide();
 	}
-});
+}
 
-$("#_closer_of_all").click(function () {
+function click_closeall_btn() {
 	$("#_menu-field-id").hide();
 	$("._login_field").hide();
 	$(this).toggle();
-});
+}
 
-
-$("._login_field_switchReg").click(function () {
+function click_loginregister_btn() {
 	$("._login_field-r").toggle();
 	$("._login_field-l").toggle();
-});
+}
 
-$("#_login-submit-id").click(login);
-$("#_register-submit-id").click(register);
-
-
-function login() {
+function click_loginsend_btn() {
 	var email = $("#_login-input-id_email").val();
 	var password = $("#_login-input-id_password").val();
 
@@ -68,7 +54,7 @@ function login() {
   });
 }
 
-function register() {
+function click_registersend_btn() {
 	var email = $("#_register-input-id_email").val();
 	var username = $("#_register-input-id_username").val();
 	var password = $("#_register-input-id_password").val();
@@ -86,28 +72,7 @@ function register() {
   });
 }
 
-
-
-
-function insCode(string) {
-	var elm = $("#_documentation_create_place-id");
-	elm.append('<pre class="line-numbers _doc_code language-rust"><code class="language-rust">'+string+'</code></pre>');
-
-}
-
-
-
-
-
-
-function undo() {
-	var elm = $("#_documentation_create_place-id");
-	elm.children().last().remove();
-}
-
-//create documentation
-//_documentation_create_place-id
-$("._create_tool").click(function () {
+function click_createtool_btn() {
 	var witch = $(this).html();
 	var type = witch.replace("add_", "");
 	var type = type.replace(/\s/g, "");
@@ -122,7 +87,7 @@ $("._create_tool").click(function () {
 		elm.append(pattern);
 	}
 	if(type == "text"){
-		var pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>%MUSTER%</p><textarea id="demo" rows="20" cols="10" contenteditable="true"></textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+		var pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>%MUSTER%</p><textarea id="demo" rows="8" cols="10" contenteditable="true"></textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
 		var pattern = pattern.replace("%MUSTER%", type);
 		elm.append(pattern);
 	}
@@ -135,7 +100,7 @@ $("._create_tool").click(function () {
 			"rust"
 		];
 		var dropdown = createDropdown(languages);
-		var pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern">' + dropdown + '<textarea id="demo" rows="20" cols="10" contenteditable="true"></textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+		var pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern">' + dropdown + '<textarea id="demo" rows="8" cols="10" contenteditable="true"></textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
 		var pattern = pattern.replace("%MUSTER%", type);
 		elm.append(pattern);
 	}
@@ -146,8 +111,86 @@ $("._create_tool").click(function () {
 		elm.append(pattern);
 		*/
 	}
+}
 
-});
+function click_removeelement_btn() {
+	$(this).parent().parent().remove();
+}
+
+function click_savedoc_btn() {
+	//elements in array
+	elements = $("#_documentation_create_place-id").children();
+	//Check get first three values
+	var isEmpty_1 = elements[1].children[0].children[0].children[1].value;
+	var isEmpty_2 = elements[2].children[0].children[0].children[1].value;
+	var isEmpty_3 = elements[3].children[0].children[0].children[1].value;
+	//Check if obligatory fields are filled
+	if(!isEmpty_1 && !isEmpty_2 && !isEmpty_3){
+		return;
+	}
+	//Build header info
+	// = [parent: "", title: "", description: ""]
+	var header = {
+		parent: isEmpty_1,
+		title: isEmpty_2,
+		description: isEmpty_3
+	};
+	//Build content
+	var content = [];
+	for (var i = 0; i < elements.length; i++) {
+		//Skip buttons and header
+		if(i < 4){
+			continue;
+		}
+		try {
+			var elm_type = elements[i].children[0].children[0].children[0].innerHTML;
+			if(elm_type.includes('<option value="Code">Code</option>')){
+				//handle options
+				elm_type = 	elements[i].children[0].children[0].children[0].value;
+			}
+			var elm_value = elements[i].children[0].children[0].children[1].value;
+			var row = {
+				type: elm_type,
+				value: elm_value
+			}
+			content.push(row);
+		} catch (e) {
+			//Exception handling
+		}
+	}
+	//Send doc
+	$.post("/docs/utility/handleDocs.php", {'header': header,
+																				  'content': content
+																			}, function(data) {
+    if(data.includes("%UPDATED_DOC%")) {
+			//Just show a updated popup
+		} else if(data.includes("%CREATED_DOC%")) {
+			//Go to created doc
+			
+		}
+  });
+}
+
+function click_choosedoc_btn() {
+	$("#_create_documentation-hidden-id").show();
+	$("._create_choose").hide();
+}
+
+function click_choosecontent_btn() {
+	$("#_create_content-hidden-id").show();
+	$("._create_choose").hide();
+}
+
+function insCode(string) {
+	var elm = $("#_documentation_create_place-id");
+	elm.append('<pre class="line-numbers _doc_code language-rust"><code class="language-rust">'+string+'</code></pre>');
+
+}
+
+function undo() {
+	var elm = $("#_documentation_create_place-id");
+	elm.children().last().remove();
+}
 
 function createDropdown(list) {
 	var x = "<select>";
@@ -159,6 +202,11 @@ function createDropdown(list) {
 	}
 	return x + "</select>"
 	//<select><option value="saab">Saab</option><option value="mercedes">Mercedes</option><option value="audi">Audi</option></select>
+}
+
+//SuperPopup
+function showPopup(title, text, logo) {
+	//NOT IMPLEMENTED YET
 }
 
 //Prevent Tabbing in Textarea
@@ -184,91 +232,12 @@ $(document).on("keydown", "textarea", function(e) {
     }
 });
 
-//removeElement
-$(document).on("click", "._elm_remove", function () {
-	$(this).parent().parent().remove();
-});
-
-
-$("#_create_save_doc-id").click(function () {
-	//elements in array
-
-	elements = $("#_documentation_create_place-id").children();
-	console.log(elements);
-
-	var isEmpty_1 = elements[1].children[0].children[0].children[1].value;
-	var isEmpty_2 = elements[2].children[0].children[0].children[1].value;
-	var isEmpty_3 = elements[3].children[0].children[0].children[1].value;
-
-	//Check if obligatory fields are filled
-	if(!isEmpty_1 && !isEmpty_2 && !isEmpty_3){
-		return;
+$(window).scroll(function() {
+	if ($(document).scrollTop() > 80) {
+		$('._navbar').addClass('_shrink');
+		$("._upscroller").fadeIn(200);
+	} else {
+		$('._navbar').removeClass('_shrink');
+		$("._upscroller").fadeOut(200);
 	}
-
-	//Build header info
-	// = [parent: "", title: "", description: ""]
-	var header = {
-		parent: isEmpty_1,
-		title: isEmpty_2,
-		description: isEmpty_3
-	};
-
-	//Build content
-	var content = [];
-
-	for (var i = 0; i < elements.length; i++) {
-		//Skip buttons and header
-		if(i < 4){
-			continue;
-		}
-
-		try {
-			var elm_type = elements[i].children[0].children[0].children[0].innerHTML;
-
-			if(elm_type.includes('<option value="Code">Code</option>')){
-				//handle options
-				elm_type = 	elements[i].children[0].children[0].children[0].value;
-			}
-
-			var elm_value = elements[i].children[0].children[0].children[1].value;
-
-			var row = {
-				type: elm_type,
-				value: elm_value
-			}
-
-			content.push(row);
-		} catch (e) {
-			//Exception handling
-		}
-	}
-
-	//Send doc
-	$.post("/docs/utility/handleDocs.php", {'header': header,
-																				'content': content
-																			}, function(data) {
-    if(data.includes("%UPDATED_DOC%")) {
-			//location.reload();
-		} else if(data.includes("%CREATED_DOC%")) {
-
-		}
-		console.log(data);
-  });
-
-	console.log(content);
-
-});
-
-//SuperPopup
-function showPopup(title, text, logo) {
-	//NOT IMPLEMENTED YET
-}
-
-$("#_create_choose_doc-id").click(function () {
-	$("#_create_documentation-hidden-id").show();
-	$("._create_choose").hide();
-});
-$("#_create_choose_content-id").click(function () {
-	$("#_create_content-hidden-id").show();
-	$("._create_choose").hide();
 });

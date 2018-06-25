@@ -51,9 +51,9 @@ if($doc_exits){
 
 		$sql = "DELETE FROM docs WHERE title='$title' AND parent='$parent';";
 		$res = $conn->query($sql);
-		echo $sql;
 
 		insert_doc($conn, $title, $parent, $content);
+		echo "%UPDATED_DOC%";
 
 	} else {
 		//Handle not own doc
@@ -67,6 +67,7 @@ if($doc_exits){
 	$res = $conn->query($sql);
 
 	insert_doc($conn, $title, $parent, $content);
+	echo "%CREATED_DOC%";
 }
 
 

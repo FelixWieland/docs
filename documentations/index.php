@@ -11,7 +11,7 @@ $conn = connect_to_db();
 <!DOCTYPE html>
 <html>
 <?php
-	create_header();
+	create_header("docs - ".$_GET["topic"]);
  ?>
   <body>
 		<?php

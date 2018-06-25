@@ -84,6 +84,7 @@
 	padding-left: 10px;
 	border-bottom: 1px solid black;
 	resize: none;
+	padding-right: 30px;	
 }
 
 ._create_pattern textarea:focus {

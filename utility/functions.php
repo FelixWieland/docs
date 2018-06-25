@@ -3,10 +3,9 @@ if(!isset($_SESSION)){session_start();}
 
 function generate_salt($p_length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%&§!';
-    $charactersLength = strlen($characters);
     $randomString = '';
     for ($i = 0; $i < $p_length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
+        $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
     return $randomString;
 }
@@ -49,20 +48,12 @@ function check_if_email_exits($conn, $p_email) {
 	}
 }
 
-function is_valid_sql($p_query)
-{
-	$notAllowedCommands = array(
-    'DELETE',
-    'TRUNCATE',
-    'DROP',
-    'USE'
-	);
-
+function is_valid_sql($p_query) {
+	$notAllowedCommands = array('DELETE', 'TRUNCATE', 'DROP', 'USE');
 	if(preg_match('[' . implode(' |', $notAllowedCommands ) . ']i', $p_query) == true) {
     return true;
 	}
-	else
-	{
+	else {
 	  return false;
 	}
 }
@@ -81,10 +72,10 @@ function register($conn, $email, $hash, $salt, $username) {
 	}
 }
 
-function mysql_num_rows($res)
-{
+//Function is not usefull couase mysqli alrady have mysqli_num_rows
+function mysql_num_rows($res) {
 	$null = true;
-	while($row = $res->fetch_assoc()){
+	while($row = $res->fetch_assoc()) {
 		$null = false;
 	}
 	return true;
@@ -92,7 +83,7 @@ function mysql_num_rows($res)
 
 function login($conn, $email) {
 	$sql = "SELECT * FROM users WHERE email = '$email';";
-	if(is_valid_sql($sql)){
+	if(is_valid_sql($sql)) {
 		$res = $conn->query($sql);
 		return $res;
 	} else {
@@ -106,11 +97,9 @@ function set_loggedin($username, $email, $layer) {
 	$_SESSION["layer"] = $layer;
 }
 
-function check_if_own_doc($conn, $parent, $title, $username)
-{
-	$sql = "SELECT * FROM docs_by_creator WHERE title = '$title' AND parent = '$parent' AND username = '$username';";
+function check_if_own_doc($conn, $p_parent, $p_title, $p_username) {
+	$sql = "SELECT * FROM docs_by_creator WHERE title = '$p_title' AND parent = '$p_parent' AND username = '$p_username';";
 	$res = $conn->query($sql);
-
 	$row = $res->fetch_assoc();
 
 	if(mysqli_num_rows($res)) {
@@ -120,11 +109,9 @@ function check_if_own_doc($conn, $parent, $title, $username)
 		//Not own doc
 		return false;
 	}
-
 }
 
-function check_if_doc_exits($conn, $parent, $title)
-{
+function check_if_doc_exits($conn, $parent, $title) {
 	$sql = "SELECT * FROM docs_by_creator WHERE title = '$title' AND parent = '$parent';";
 	$res = $conn->query($sql);#
 
@@ -140,4 +127,4 @@ function check_if_doc_exits($conn, $parent, $title)
 
 }
 
- ?>
+?>

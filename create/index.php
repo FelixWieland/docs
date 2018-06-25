@@ -9,121 +9,93 @@ if(!isset($_SESSION["username"])) {
 	exit;
 }
 
+$username = $_SESSION["username"];
+$edit = false;
+$description = "";
+$parent = "";
+$title = "";
  ?>
 <!DOCTYPE html>
 <html>
 <?php
-	create_header();
+	create_header("docs - Create stuff");
  ?>
   <body>
 		<?php
+
 			create_layout("create.doc", "content", "-", "create a documentation", "no");
-		 ?>
+			if(isset($_GET["parent"]) && isset($_GET["type"]) && isset($_GET["title"])) {
+				if($_GET["type"] == "content") {
+					$title = $_GET['title'];
+					$parent = $_GET['parent'];
+					$sql = "SELECT * FROM docs_by_creator WHERE username = '$username' AND parent = '$parent' AND title = '$title'";
+					$res = $conn->query($sql);
+					if(mysqli_num_rows($res) != 0){
+						//set editing var
+						$edit = true;
+						$row = $res->fetch_assoc();
+						$description = $row["description"];
+					}
+				}
+			}
 
-		 <div class="container">
-			 <div class="row _create_choose">
-				 <div class="col-sd-12 col-md-6 col-lg-6" id="_create_choose_content-id">
-						Content
-				 </div>
-				 <div class="col-sd-12 col-md-6 col-lg-6" id="_create_choose_doc-id">
-						Documentation
-				 </div>
-			 </div>
-		 </div>
-		 <div id="_create_documentation-hidden-id">
-			 <div id="_documentation_create_place-id" class="container well">
-				 <div class="row">
-					 <div class="col-sd-12 col-md-12 col-lg-12 _create_toolbar">
-						 <div class="_create_tool">
-							 add_header
-						 </div>
-						 <div class="_create_tool">
-							add_text
-						 </div>
-						 <div class="_create_tool">
-							 add_code
-						 </div>
-						 <div class="_create_tool">
-							 add_download
-						 </div>
-						 <div class="_create_tool">
-							 add_linebreak
-						 </div>
-					 </div>
-				 </div>
-				 <div class="row">
-					 <div class="col-sd-12 col-md-12 col-lg-12">
-						 <div class="_create_pattern">
-							 <p>Parent</p><input type="text" name="" value="">
-						 </div>
-					 </div>
-				 </div>
-				 <div class="row">
-					 <div class="col-sd-12 col-md-12 col-lg-12">
-						 <div class="_create_pattern">
-							 <p>Title</p><input type="text" name="" value="">
-						 </div>
-					 </div>
-				 </div>
-				 	<div class="row">
-					 	<div class="col-sd-12 col-md-12 col-lg-12">
-						 	<div class="_create_pattern">
-								<p>Description</p><input type="text" name="" value="">
-						 	</div>
-					 	</div>
-				 	</div>
-				 	<br>
-			 	</div>
-				<div class="container">
-					<div class="row">
-						<div class="">
-							<div class="col-sd-12 col-md-12 col-lg-12">
-								<p id="_create_save_doc-id">Save</p>
-							</div>
-						</div>
-					</div>
-				</div>
-		 </div>
-		 <div id="_create_content-hidden-id">
-			 <br><br>
-			 <div class="container">
-				 <div class="row">
-					 <div class="col-sd-12 col-md-12 col-lg-12">
-						 <div class="_create_pattern">
-							 <p>Topic</p><input type="text" name="" value="">
-						 </div>
-					 </div>
-				 </div>
-				 <div class="row">
-					 <div class="col-sd-12 col-md-12 col-lg-12">
-						 <div class="_create_pattern">
-							 <p>Parent</p><input type="text" name="" value="">
-						 </div>
-					 </div>
-				 </div>
-				 <div class="row">
-					 <div class="col-sd-12 col-md-12 col-lg-12">
-						 <div class="_create_pattern">
-							 <p>Content</p><input type="text" name="" value="">
-						 </div>
-					 </div>
-				 </div>
-			 </div>
-			 <div class="container">
-				 <div class="row">
-					 <div class="">
-						 <div class="col-sd-12 col-md-12 col-lg-12">
-							 <p id="_create_save_content-id">Save</p>
-						 </div>
-					 </div>
-				 </div>
-			 </div>
-		 </div>
+			if($edit) {
+				$sql = "SELECT * FROM docs WHERE title = '$title' AND parent = '$parent';";
+				$res = $conn->query($sql);
+				$rest = "";
 
-		<?php
+				while($row = $res->fetch_assoc()) {
+					$type = $row["type"];
+					$text = $row["text"];
+
+					if($type == "header"){
+						$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>'.$type.'</p><input type="text" name="" value="'.$text.'"><button type="button" name="button" class="_elm_remove">X</button></div></div></div>';
+						$rest = $rest.$pattern;
+
+					} else if($type == "linebreak") {
+						$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern _linebreak"><button type="button" name="button" class="_elm_remove">X</button></div></div></div>';
+						$rest = $rest.$pattern;
+
+					} else if($type == "text") {
+						$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>'.$type.'</p><textarea id="demo" rows="8" cols="10" contenteditable="true">'.$text.'</textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+						$rest = $rest.$pattern;
+
+					} else if($type == "download") {
+						/*
+						var pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>%MUSTER%</p><textarea id="demo" rows="20" cols="10" contenteditable="true"></textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+						var pattern = pattern.replace("%MUSTER%", type);
+						elm.append(pattern);
+						*/
+					}
+					else {
+						$languages = array("%MUSTER%", "csharp", "c", "cpp", "rust");
+
+						foreach ($languages as $key => $value) {
+							if($value == "%MUSTER%"){
+								$languages[$key] = $type;
+							} else if($value == $type) {
+								$languages[$key] = "Code";
+							}
+						}
+
+						$dropdown = create_dropdown($languages);
+						$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern">'.$dropdown.'<textarea id="demo" rows="8" cols="10" contenteditable="true">'.$text.'</textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+						$rest = $rest.$pattern;
+
+					}
+				}
+
+				create_createdoc($parent, $title, $description, $rest);
+			} else {
+				create_createchooser();
+				create_createcontent();
+				create_createdoc();
+			}
+
 			//read_topics($conn);
 			//read_contents($conn, "Programming");
 			createBottomWRAPPER();
+
 		 ?>
 
 	</body>

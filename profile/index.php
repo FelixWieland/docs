@@ -47,7 +47,7 @@ if(!isset($_SESSION["username"])) {
 						while($row = $res->fetch_assoc()){
 							echo '
 								<ul>
-						 			<a href="/docs/documentations/doc/?parent='.$row["parent"].'&title='.$row["title"].'"><li>'.$row["title"].'</li></a>
+						 			<li><a href="/docs/documentations/doc/?parent='.$row["parent"].'&title='.$row["title"].'">'.$row["title"].'</a><a href="/docs/create/?type=content&parent='.$row["parent"].'&title='.$row["title"].'">_Edit</a></li>
 								</ul>
 							';
 						}
@@ -56,8 +56,6 @@ if(!isset($_SESSION["username"])) {
 				 </div>
 			 </div>
 			 </div>
-
-
 </div>
 		<?php
 			//read_topics($conn);
