@@ -4,16 +4,13 @@ if(!isset($_SESSION)){session_start();}
 require_once $_SERVER['DOCUMENT_ROOT'].'/docs/sql/connector.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/docs/utility/functions.php';
 
-//Handles all doc actions - CREATE UPDATE DELETE
-
+//Handles all doc actions - CREATE UPDATE DELETE // -> DELETE not YET
 $conn = connect_to_db();
 
 $header = false;
 $content = false;
 $description = false;
 $username = $_SESSION['username'];
-
-
 
 if(isset($_POST["header"]) && isset($_POST["content"])){
 	$header = $_POST["header"];
@@ -24,14 +21,6 @@ if(isset($_POST["header"]) && isset($_POST["content"])){
 
 //First: Check if doc exits
 
-/*
-header = {
-	parent: isEmpty_1,
-	title: isEmpty_2,
-	description: isEmpty_3
-};
-*/
-
 $parent = $header["parent"];
 $title = $header["title"];
 $description = $header["description"];
@@ -39,7 +28,7 @@ $description = $header["description"];
 
 $doc_exits = check_if_doc_exits($conn, $parent, $title);
 
-if($doc_exits){
+if($doc_exits) {
 	//Handle doc exits
 	$own_doc = check_if_own_doc($conn, $parent, $title, $username);
 

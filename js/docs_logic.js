@@ -164,9 +164,10 @@ function click_savedoc_btn() {
 																			}, function(data) {
     if(data.includes("%UPDATED_DOC%")) {
 			//Just show a updated popup
+			showPopup("Updated", "Youre documentation - "+header["title"]+" - was successfully updated.", "ok");
 		} else if(data.includes("%CREATED_DOC%")) {
 			//Go to created doc
-			
+			window.location.href = '/docs/documentations/doc/?parent='+header["parent"]+'&title='+header["title"];
 		}
   });
 }
@@ -205,8 +206,13 @@ function createDropdown(list) {
 }
 
 //SuperPopup
-function showPopup(title, text, logo) {
+function showPopup(title, text, icon, mode=4000) {
 	//NOT IMPLEMENTED YET
+	var pattern = '<div class="_super_popup_b1"><h3>'+title+'</h3><span class="glyphicon glyphicon-'+icon+'" aria-hidden="true"></span><p>'+text+'</p></div>'
+	$("body").append(pattern);
+	$("._super_popup_b1").fadeIn(1000).delay(mode).fadeOut(1000, function () {
+		$(this).remove();
+	});
 }
 
 //Prevent Tabbing in Textarea

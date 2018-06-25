@@ -5,6 +5,10 @@ if(!isset($_SESSION)){session_start();}
    because they rely on Sessions, Gets, Posts, or Files.
 
 	 In Version 1.1 there are many functions that are not refactored yet.
+
+	 From here on functions with create_ as prefix will instant output there created html
+	 but functions with build_ as prefix will just return the created html
+
  */
 
 function create_header($for="docs", $type="std") {
@@ -14,6 +18,7 @@ function create_header($for="docs", $type="std") {
 							<meta charset="utf-8">
 							<meta http-equiv="X-UA-Compatible" content="IE=edge">
 							<meta name="viewport" content="width=device-width, initial-scale=1">
+							<link rel="icon" href="/docs/media/logos/logo.png">
 							<title>'.$for.'</title>
 							<link href="/docs/css/bootstrap.min.css" rel="stylesheet">
 							<link rel="stylesheet" href="/docs/css/prism.css">
@@ -98,7 +103,7 @@ function create_scripts() {
 	echo '<script src="/docs/js/jquery.js"></script>
 				<script src="/docs/js/bootstrap.min.js"></script>
 				<script src="/docs/js/prism.js"></script>
-				<script src="/docs/js/docs.js"></script>
+				<script src="/docs/js/docs_logic.js"></script>
 				<script src="/docs/js/click_listeners.js"></script>';
 }
 
@@ -273,7 +278,22 @@ function create_createcontent() {
 								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-sd-12 col-md-12 col-lg-12">
+								<div class="_create_pattern">
+									<p>Header</p><input type="text" name="" value="">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sd-12 col-md-12 col-lg-12">
+								<div class="_create_pattern">
+									<p>Description</p><textarea id="demo" rows="8" cols="10" contenteditable="true"></textarea>
+								</div>
+							</div>
+						</div>
 					</div>
+					<br>
 					<div class="container">
 						<div class="row">
 							<div class="">
@@ -373,6 +393,53 @@ function read_contents($conn, $topic, $parent='-') {
 			}
 		}
 	}
+}
+
+function build_updatedoc($res) { //This takes a documentation and create prefilled inputs and textareas to update it
+
+	$rest = "";
+
+	while($row = $res->fetch_assoc()) {
+		$type = $row["type"];
+		$text = $row["text"];
+
+		if($type == "header"){
+			$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>'.$type.'</p><input type="text" name="" value="'.$text.'"><button type="button" name="button" class="_elm_remove">X</button></div></div></div>';
+			$rest = $rest.$pattern;
+
+		} else if($type == "linebreak") {
+			$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern _linebreak"><button type="button" name="button" class="_elm_remove">X</button></div></div></div>';
+			$rest = $rest.$pattern;
+
+		} else if($type == "text") {
+			$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>'.$type.'</p><textarea id="demo" rows="8" cols="10" contenteditable="true">'.$text.'</textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+			$rest = $rest.$pattern;
+
+		} else if($type == "download") {
+			/*
+			var pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern"><p>%MUSTER%</p><textarea id="demo" rows="20" cols="10" contenteditable="true"></textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+			var pattern = pattern.replace("%MUSTER%", type);
+			elm.append(pattern);
+			*/
+		}
+		else {
+			$languages = array("%MUSTER%", "csharp", "c", "cpp", "rust");
+
+			foreach ($languages as $key => $value) {
+				if($value == "%MUSTER%"){
+					$languages[$key] = $type;
+				} else if($value == $type) {
+					$languages[$key] = "Code";
+				}
+			}
+
+			$dropdown = create_dropdown($languages);
+			$pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern">'.$dropdown.'<textarea id="demo" rows="8" cols="10" contenteditable="true">'.$text.'</textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
+			$rest = $rest.$pattern;
+		}
+	}
+
+	return $rest;
 }
 
 /*The following functions are just wrappers for other functions so that for

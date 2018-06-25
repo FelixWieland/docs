@@ -1,0 +1,1 @@
+For the REST API we going to use Rust or Python and not PHP cause performance issues.

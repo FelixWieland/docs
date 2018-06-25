@@ -522,10 +522,10 @@ h4 {
 	color: white;
 	display: none;
 }
+
 #_closer_of_all:hover {
 	cursor: pointer;
 }
-
 
 ._create_marker {
 	font-family: Zilla-Bold;
@@ -536,8 +536,47 @@ h4 {
 	font-size: 22px;
 	margin: 0px;
 }
+
 ._create_marker:hover {
 	cursor: pointer;
 	text-decoration: none;
 	color: white;
+}
+
+._super_popup_b1 {
+	display: hidden;
+	position: fixed;
+	background-color: black;
+	font-family: Zilla-Bold;
+	width: 350px;
+	height: 120px;
+	right: 10px;
+	bottom: 10px;
+	box-shadow: 0 0px 0px rgba(255,255,255,0.12), 0 1px 1px rgba(255,255,255,0.24);
+	padding: 15px;
+	overflow: hidden;
+}
+._super_popup_b1 p {
+	color: white;
+	font-size: 18px;
+}
+._super_popup_b1 h3 {
+	text-transform: uppercase;
+	font-size: 20px;
+	color: white;
+	margin: 0px;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid white;
+	width: 90%;
+	float: left;
+}
+
+._super_popup_b1 span {
+	float: right;
+	margin-right: 2px;
+	margin-left: 2px;
+	color: white;
+	font-size: 20px;
+	padding-bottom: 10px;
 }
