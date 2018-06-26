@@ -14,6 +14,7 @@ $edit = false;
 $description = "";
 $parent = "";
 $title = "";
+$pid = "";
  ?>
 <!DOCTYPE html>
 <html>
@@ -23,7 +24,7 @@ $title = "";
   <body>
 		<?php
 			create_layout("create.doc", "content", "-", "create a documentation", "no");
-			if(isset($_GET["parent"]) && isset($_GET["type"]) && isset($_GET["title"])) {
+			if(isset($_GET["parent"]) && isset($_GET["type"]) && isset($_GET["title"]) && isset($_GET["pid"])) {
 				if($_GET["type"] == "content") {
 					$title = $_GET['title'];
 					$parent = $_GET['parent'];
@@ -34,13 +35,15 @@ $title = "";
 						$edit = "create";
 						$row = $res->fetch_assoc();
 						$description = $row["description"];
+						$pid = $_GET["pid"];
 					}
 				}
-			} else if (isset($_GET["parent"]) && isset($_GET["type"]) && isset($_GET["topic"])) {
+			} else if (isset($_GET["parent"]) && isset($_GET["type"]) && isset($_GET["topic"]) && isset($_GET["pid"])) {
 				if($_GET["type"] == "set") {
 					$parent = $_GET["parent"];
 					$topic = $_GET["topic"];
 					$edit = "doc";
+					$pid = $_GET["pid"];
 				}
 			}
 
@@ -48,15 +51,15 @@ $title = "";
 				$sql = "SELECT * FROM docs WHERE title = '$title' AND parent = '$parent';";
 				$res = $conn->query($sql);
 				$rest = build_updatedoc($res);
-				create_createdoc($parent, $title, $description, $rest);
+				create_createdoc($parent, $title, $description, $pid, $rest);
 			} else if($edit != "doc") {
 				create_createchooser();
 				create_createcontent();
 				create_createdoc();
 			} else {
 				create_createchooser();
-				create_createcontent($topic, $parent);
-				create_createdoc($parent, $title, $description, "", "set");
+				create_createcontent($topic, $parent, $pid);
+				create_createdoc($parent, $title, $description, $pid, "", "set");
 			}
 
 			//read_topics($conn);

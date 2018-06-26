@@ -21,7 +21,8 @@ $conn = connect_to_db();
 		<div class="container well">
 			<?php
 				//Build doc
-				$sql = "SELECT * FROM docs WHERE title = '$title' AND parent = '$parent';";
+				$pid = $_GET['pid'];
+				$sql = "SELECT * FROM docs WHERE title = '$title' AND parent = '$parent' and pid = '$pid';";
 				$res = $conn->query($sql);
 
 				$doc_contents = array();

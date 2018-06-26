@@ -44,8 +44,17 @@ function create_layout($for="docs.place", $type="std", $description=" ", $emptys
 		//$creator = '<a href="/docs/create/" class="_create_marker">_create</a>';
 	}
 	if(isset($_SESSION["username"]) && $set_creator == " " && isset($_GET["parent"]) && isset($_GET["topic"]) || isset($_GET["title"])) {
-			$parent = $_GET["parent"];
-			$creator = '<a href="/docs/create/?type=set&topic='.$_GET["topic"].'&parent='.$parent.'" class="_create_marker">_create</a>';
+
+		$ids = "";
+
+		if(isset($_GET["id"])) {
+			$ids = $_GET["id"];
+		} else if(isset($_GET["pid"])) {
+			$ids = $_GET["pid"];
+		}
+
+		$parent = $_GET["parent"];
+		$creator = '<a href="/docs/create/?type=set&pid='.$ids.'&topic='.$_GET["topic"].'&parent='.$parent.'" class="_create_marker">_create</a>';
 	}
 	switch ($type) {
 		case 'std':
@@ -195,7 +204,7 @@ function create_upscroller() {
 	echo '<div class="_upscroller">&Lambda;</div>';
 }
 
-function create_createdoc($p_parent="", $p_title="", $p_description="", $p_rest="", $p_type="") {
+function create_createdoc($p_parent="", $p_title="", $p_description="", $p_pid="", $p_rest="", $p_type="") {
 	$visible = "";
 	$unchangeable = "";
 	$unchangeable_parent = "";
@@ -237,6 +246,13 @@ function create_createdoc($p_parent="", $p_title="", $p_description="", $p_rest=
 							</div>
 						</div>
 						<div class="row">
+ 							<div class="col-sd-12 col-md-12 col-lg-12">
+ 								<div class="_create_pattern">
+ 									<p>PID</p><input type="text" name=""  '.$unchangeable_parent.' value="'.$p_pid.'">
+ 								</div>
+ 							</div>
+ 						</div>
+						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
 									<p>Title</p><input type="text" name="" '.$unchangeable.' value="'.$p_title.'">
@@ -266,7 +282,7 @@ function create_createdoc($p_parent="", $p_title="", $p_description="", $p_rest=
 				</div>';
 }
 
-function create_createcontent($p_topic="", $p_parent="") {
+function create_createcontent($p_topic="", $p_parent="", $p_pid="") {
 	$disabled_topic = "";
 	$disabled_parent = "";
 	if($p_topic != "" && $p_topic != " ") {
@@ -281,35 +297,42 @@ function create_createcontent($p_topic="", $p_parent="") {
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Topic</p><input type="text" name="" '.$disabled_topic.' value="'.$p_topic.'">
+									<p>Topic</p><input id="_create_content_input-topic-id" type="text" name="" '.$disabled_topic.' value="'.$p_topic.'">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Parent</p><input type="text" name=""  '.$disabled_parent.' value="'.$p_parent.'">
+									<p>Parent</p><input id="_create_content_input-parent-id" type="text" name=""  '.$disabled_parent.' value="'.$p_parent.'">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Content</p><input type="text" name="" value="">
+									<p>PID</p><input id="_create_content_input-pid-id" type="text" name=""  '.$disabled_parent.' value="'.$p_pid.'">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Header</p><input type="text" name="" value="">
+									<p>Content</p><input id="_create_content_input-content-id" type="text" name="" value="">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Description</p><textarea id="demo" rows="8" cols="10" contenteditable="true"></textarea>
+									<p>Header</p><input id="_create_content_input-header-id" type="text" name="" value="">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sd-12 col-md-12 col-lg-12">
+								<div class="_create_pattern">
+									<p>Description</p><textarea id="_create_content_textarea-description-id" rows="8" cols="10" contenteditable="true"></textarea>
 								</div>
 							</div>
 						</div>
@@ -383,7 +406,7 @@ function read_topics($conn) {
 	$sql = "SELECT * FROM topics";
 	$res = $conn->query($sql);
 	while($row = $res->fetch_assoc()){
-		echo '<a class="_content_link" href="/docs/documentations/?topic='.$row["topic"].'&parent=-"><div class="_topic_elm col-sm-6 col-md-4 col-lg-3">'.$row["topic"].'</div></a>';
+		echo '<a class="_content_link" href="/docs/documentations/?topic='.$row["topic"].'&id=-1&parent=-"><div class="_topic_elm col-sm-6 col-md-4 col-lg-3">'.$row["topic"].'</div></a>';
 	}
 }
 
@@ -393,24 +416,39 @@ function read_contents($conn, $topic, $parent='-') {
 		$contents_of = $topic;
 	}
 	echo "<h1>Contents of ".$contents_of."</h1><br>";
-	if($parent=="-"){
+	if($parent=="-") {
 		$sql = "SELECT * FROM contents WHERE topic = '$topic' AND parent = '-' OR parent = '';";
 		$res = $conn->query($sql);
 		while($row = $res->fetch_assoc()){
-			echo '<a class="_content_link" href="/docs/documentations/?topic='.$row["topic"].'&parent='.$row["name"].'"><div class="_content_elm col-sm-6 col-md-4 col-lg-3">'.$row["name"].'</div></a>';
+			echo '<a class="_content_link" href="/docs/documentations/?topic='.$row["topic"].'&id='.$row["id"].'&parent='.$row["name"].'"><div class="_content_elm col-sm-6 col-md-4 col-lg-3">'.$row["name"].'</div></a>';
 		}
+		$id = $_GET["id"];
+		$sql = "SELECT * FROM docs WHERE parent = '$parent' AND pid = '$id' GROUP BY title";
+		$res = $conn->query($sql);
+		while($row = $res->fetch_assoc()){
+			echo '<a class="_content_link" href="/docs/documentations/doc/?topic='.$_GET["topic"].'&pid='.$row["pid"].'&parent='.$parent.'&title='.$row["title"].'"><div class="_doc_bg_color _content_elm col-sm-6 col-md-4 col-lg-3">'.$row["title"].'</div></a>';
+		}
+
 	} else {
 		$sql = "SELECT * FROM contents WHERE topic = '$topic' AND parent = '$parent'";
 		$res = $conn->query($sql);
 		$count = 0;
 		while($row = $res->fetch_assoc()){
-			echo '<a class="_content_link" href="/docs/documentations/?topic='.$row["topic"].'&parent='.$row["name"].'"><div class="_content_elm col-sm-6 col-md-4 col-lg-3">'.$row["name"].'</div></a>';
+			echo '<a class="_content_link" href="/docs/documentations/?topic='.$row["topic"].'&id='.$row["id"].'&parent='.$row["name"].'"><div class="_content_elm col-sm-6 col-md-4 col-lg-3">'.$row["name"].'</div></a>';
 		}
 		if ($count == 0) {
-			$sql = "SELECT * FROM docs WHERE parent = '$parent' GROUP BY title";
+			$id = $_GET["id"];
+			$sql = "SELECT * FROM docs WHERE parent = '$parent' AND pid = '$id' GROUP BY title";
 			$res = $conn->query($sql);
 			while($row = $res->fetch_assoc()){
-				echo '<a class="_content_link" href="/docs/documentations/doc/?topic='.$_GET["topic"].'&parent='.$parent.'&title='.$row["title"].'"><div class="_content_elm col-sm-6 col-md-4 col-lg-3">'.$row["title"].'</div></a>';
+				echo '<a class="_content_link" href="/docs/documentations/doc/?topic='.$_GET["topic"].'&pid='.$row["pid"].'&parent='.$parent.'&title='.$row["title"].'"><div class="_doc_bg_color _content_elm col-sm-6 col-md-4 col-lg-3">'.$row["title"].'</div></a>';
+			}
+		} else {
+			$id = $_GET["id"];
+			$sql = "SELECT * FROM docs WHERE parent = '$parent' AND pid = '$id' GROUP BY title";
+			$res = $conn->query($sql);
+			while($row = $res->fetch_assoc()){
+				echo '<a class="_content_link" href="/docs/documentations/doc/?topic='.$_GET["topic"].'&pid='.$row["pid"].'&parent='.$parent.'&title='.$row["title"].'"><div class="_doc_bg_color _content_elm col-sm-6 col-md-4 col-lg-3">'.$row["title"].'</div></a>';
 			}
 		}
 	}

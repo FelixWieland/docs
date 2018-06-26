@@ -85,19 +85,19 @@ body {
 }
 
 ._bg_main_green {
-	background-color: #00AA8d;
+	background-color: #00AA8d !important;
 }
 
 ._bg_main_blue {
-	background-color: #3f51b5;
+	background-color: #3f51b5 !important;
 }
 
 ._bg_main_rust {
-	background-color: #c6573c;
+	background-color: #c6573c !important;
 }
 
 ._bg_main_yellow {
-	background-color: #ffc107;
+	background-color: #ffc107 !important;
 }
 
 ._shrink {
@@ -579,4 +579,8 @@ h4 {
 	color: white;
 	font-size: 20px;
 	padding-bottom: 10px;
+}
+
+._doc_bg_color {
+	background-color: #3f51b5;
 }

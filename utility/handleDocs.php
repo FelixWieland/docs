@@ -7,6 +7,10 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/docs/utility/functions.php';
 //Handles all doc actions - CREATE UPDATE DELETE // -> DELETE not YET
 $conn = connect_to_db();
 
+if(!isset($_SESSION["username"])) {
+	exit;
+}
+
 $header = false;
 $content = false;
 $description = false;
@@ -24,6 +28,7 @@ if(isset($_POST["header"]) && isset($_POST["content"])){
 $parent = $header["parent"];
 $title = $header["title"];
 $description = $header["description"];
+$pid = $header["pid"];
 
 
 $doc_exits = check_if_doc_exits($conn, $parent, $title);
@@ -41,7 +46,7 @@ if($doc_exits) {
 		$sql = "DELETE FROM docs WHERE title='$title' AND parent='$parent';";
 		$res = $conn->query($sql);
 
-		insert_doc($conn, $title, $parent, $content);
+		insert_doc($conn, $title, $parent, $content, $pid);
 		echo "%UPDATED_DOC%";
 
 	} else {
@@ -55,17 +60,17 @@ if($doc_exits) {
 	$sql = "INSERT INTO docs_by_creator (id, username, parent, title, description, creation_dat, lastchange_dat) VALUES (null, '$username', '$parent', '$title', '$description', current_date(), current_date());";
 	$res = $conn->query($sql);
 
-	insert_doc($conn, $title, $parent, $content);
+	insert_doc($conn, $title, $parent, $content, $pid);
 	echo "%CREATED_DOC%";
 }
 
 
-function insert_doc($conn, $title, $parent, $content)
+function insert_doc($conn, $title, $parent, $content, $pid)
 {
 	foreach ($content as $row) {
 		$text = $row["value"];
 		$type = $row["type"];
-		$sql = "INSERT INTO docs (id, title, parent, type, text) VALUES (null, '$title', '$parent', '$type', '$text');";
+		$sql = "INSERT INTO docs (id, pid, title, parent, type, text) VALUES (null, '$pid', '$title', '$parent', '$type', '$text');";
 		$res = $conn->query($sql);
 	}
 }

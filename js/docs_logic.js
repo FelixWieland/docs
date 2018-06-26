@@ -1,3 +1,20 @@
+var $_GET = {};
+
+if(document.location.toString().indexOf('?') !== -1) {
+    var query = document.location
+                   .toString()
+                   // get the query string
+                   .replace(/^.*?\?/, '')
+                   // and remove any existing hash string (thanks, @vrijdenker)
+                   .replace(/#.*$/, '')
+                   .split('&');
+
+    for(var i=0, l=query.length; i<l; i++) {
+       var aux = decodeURIComponent(query[i]).split('=');
+       $_GET[aux[0]] = aux[1];
+    }
+}
+
 
 function click_upscroller_btn() {
 	$('html, body').animate({ scrollTop: 0 }, 300);
@@ -124,22 +141,24 @@ function click_savedoc_btn() {
 	var isEmpty_1 = elements[1].children[0].children[0].children[1].value;
 	var isEmpty_2 = elements[2].children[0].children[0].children[1].value;
 	var isEmpty_3 = elements[3].children[0].children[0].children[1].value;
+	var isEmpty_4 = elements[4].children[0].children[0].children[1].value;
 	//Check if obligatory fields are filled
-	if(!isEmpty_1 && !isEmpty_2 && !isEmpty_3){
+	if(!isEmpty_1 && !isEmpty_2 && !isEmpty_3 && !isEmpty_4){
 		return;
 	}
 	//Build header info
 	// = [parent: "", title: "", description: ""]
 	var header = {
 		parent: isEmpty_1,
-		title: isEmpty_2,
-		description: isEmpty_3
+		title: isEmpty_3,
+		description: isEmpty_4,
+		pid: isEmpty_2
 	};
 	//Build content
 	var content = [];
 	for (var i = 0; i < elements.length; i++) {
 		//Skip buttons and header
-		if(i < 4){
+		if(i < 5){
 			continue;
 		}
 		try {
@@ -167,7 +186,9 @@ function click_savedoc_btn() {
 			showPopup("Updated", "Youre documentation - "+header["title"]+" - was successfully updated.", "ok");
 		} else if(data.includes("%CREATED_DOC%")) {
 			//Go to created doc
-			window.location.href = '/docs/documentations/doc/?parent='+header["parent"]+'&title='+header["title"];
+			topic = $_GET["topic"];
+			window.location.href = '/docs/documentations/doc/?topic='+topic+'&pid='+header["pid"]+'&parent='+header["parent"]+'&title='+header["title"];
+
 		}
   });
 }
@@ -249,5 +270,31 @@ $(window).scroll(function() {
 });
 
 function click_savecontent_btn() {
-	alert();
+	var topic = $("#_create_content_input-topic-id").val();
+	var parent = $("#_create_content_input-parent-id").val();
+	var pid = $("#_create_content_input-pid-id").val();
+	var content = $("#_create_content_input-content-id").val();
+	var header = $("#_create_content_input-header-id").val();
+	var description = $("#_create_content_textarea-description-id").val();
+
+	if(!topic || !parent || !pid || !content || !header || !description) {
+		return;
+	}
+
+	$.post("/docs/utility/handleContent.php", {	'topic': topic,
+																						'parent': parent,
+																						'pid': pid,
+																						'content': content,
+																						'header': header,
+																						'description': description
+																					}, function(data) {
+    if(data.includes("%CREATED_CONTENT%")) {
+			//link to content
+			window.location.href = '/docs/documentations/?topic='+topic+'&id='+pid+'&parent='+parent
+		}
+  });
+
+
+
+
 }
