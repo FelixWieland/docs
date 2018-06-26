@@ -31,22 +31,32 @@ $title = "";
 					$res = $conn->query($sql);
 					if(mysqli_num_rows($res) != 0){
 						//set editing var
-						$edit = true;
+						$edit = "create";
 						$row = $res->fetch_assoc();
 						$description = $row["description"];
 					}
 				}
+			} else if (isset($_GET["parent"]) && isset($_GET["type"]) && isset($_GET["topic"])) {
+				if($_GET["type"] == "set") {
+					$parent = $_GET["parent"];
+					$topic = $_GET["topic"];
+					$edit = "doc";
+				}
 			}
 
-			if($edit) {
+			if($edit == "create") {
 				$sql = "SELECT * FROM docs WHERE title = '$title' AND parent = '$parent';";
 				$res = $conn->query($sql);
 				$rest = build_updatedoc($res);
 				create_createdoc($parent, $title, $description, $rest);
-			} else {
+			} else if($edit != "doc") {
 				create_createchooser();
 				create_createcontent();
 				create_createdoc();
+			} else {
+				create_createchooser();
+				create_createcontent($topic, $parent);
+				create_createdoc($parent, $title, $description, "", "set");
 			}
 
 			//read_topics($conn);

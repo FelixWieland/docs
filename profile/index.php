@@ -13,7 +13,7 @@ if(!isset($_SESSION["username"])) {
 <!DOCTYPE html>
 <html>
 <?php
-	create_header();
+	create_header("docs - Profile");
  ?>
   <body>
 		<?php
@@ -25,7 +25,7 @@ if(!isset($_SESSION["username"])) {
 			$res = $conn->query($sql)->fetch_assoc();
 		 ?>
 		 <div class="container well">
-			 <div class="row">
+			 <div class="row _bg_main_rust">
 				 <div class="col-sd-12 col-md-12 col-lg-12 _profile_username">
 					 <?php echo $username; ?>
 				 </div>

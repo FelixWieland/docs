@@ -43,7 +43,7 @@
 	color: black;
 	background-color: #00AA8d;
 	margin: 0px;
-	border-bottom: 2px solid white;
+	border-top: 2px solid white;
 	padding: 5px;
 	padding-left: 20px;
 }
@@ -65,4 +65,12 @@
 
 ._profile_documentations {
 	padding: 0px;
+}
+
+@media (max-width:991px) {
+	._profile_avatar img {
+		width: 60%;
+		margin-left: 20%;
+		height: auto;
+	}
 }

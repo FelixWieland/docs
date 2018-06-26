@@ -8,7 +8,6 @@ if(!isset($_SESSION)){session_start();}
 
 	 From here on functions with create_ as prefix will instant output there created html
 	 but functions with build_ as prefix will just return the created html
-
  */
 
 function create_header($for="docs", $type="std") {
@@ -33,15 +32,20 @@ function create_header($for="docs", $type="std") {
 }
 
 function create_layout($for="docs.place", $type="std", $description=" ", $emptyset=" ", $set_creator=" ") {
+	//?type=content&parent=C-Sharp&title=MySQL-Connection
 	$creator = "";
-	if($description==" "){
+	if($description==" ") {
 		$description = "Documentations about ".$for;
 	}
-	if($emptyset != " "){
+	if($emptyset != " ") {
 		$description = $emptyset;
 	}
-	if(isset($_SESSION["username"]) && $set_creator == " "){
-		$creator = '<a href="/docs/create/" class="_create_marker">_create</a>';
+	if(isset($_SESSION["username"]) && $set_creator == " ") {
+		//$creator = '<a href="/docs/create/" class="_create_marker">_create</a>';
+	}
+	if(isset($_SESSION["username"]) && $set_creator == " " && isset($_GET["parent"]) && isset($_GET["topic"]) || isset($_GET["title"])) {
+			$parent = $_GET["parent"];
+			$creator = '<a href="/docs/create/?type=set&topic='.$_GET["topic"].'&parent='.$parent.'" class="_create_marker">_create</a>';
 	}
 	switch ($type) {
 		case 'std':
@@ -188,13 +192,19 @@ function create_upscroller() {
 	echo '<div class="_upscroller">&Lambda;</div>';
 }
 
-function create_createdoc($p_parent="", $p_title="", $p_description="", $p_rest="") {
+function create_createdoc($p_parent="", $p_title="", $p_description="", $p_rest="", $p_type="") {
 	$visible = "";
 	$unchangeable = "";
-	if($p_rest != "" && $p_rest != " "){
+	$unchangeable_parent = "";
+	if($p_rest != "" && $p_rest != " ") {
 		$visible = 'style="display: block;"';
 		$unchangeable = 'disabled';
+		$unchangeable_parent = $unchangeable;
 	}
+	if(($p_rest == "" || $p_rest == " ") && $p_type == "set") {
+		$unchangeable_parent = 'disabled';
+	}
+
 	echo '<div id="_create_documentation-hidden-id" '.$visible.'>
 					<div id="_documentation_create_place-id" class="container well">
 						<div class="row">
@@ -219,7 +229,7 @@ function create_createdoc($p_parent="", $p_title="", $p_description="", $p_rest=
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Parent</p><input type="text" name="" '.$unchangeable.' value="'.$p_parent.'">
+									<p>Parent</p><input type="text" name="" '.$unchangeable_parent.' value="'.$p_parent.'">
 								</div>
 							</div>
 						</div>
@@ -253,21 +263,29 @@ function create_createdoc($p_parent="", $p_title="", $p_description="", $p_rest=
 				</div>';
 }
 
-function create_createcontent() {
+function create_createcontent($p_topic="", $p_parent="") {
+	$disabled_topic = "";
+	$disabled_parent = "";
+	if($p_topic != "" && $p_topic != " ") {
+		$disabled_topic = "disabled";
+	}
+	if($p_parent != "" && $p_parent != " "){
+		$disabled_parent = "disabled";
+	}
 	echo '<div id="_create_content-hidden-id">
 					<br><br>
 					<div class="container">
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Topic</p><input type="text" name="" value="">
+									<p>Topic</p><input type="text" name="" '.$disabled_topic.' value="'.$p_topic.'">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sd-12 col-md-12 col-lg-12">
 								<div class="_create_pattern">
-									<p>Parent</p><input type="text" name="" value="">
+									<p>Parent</p><input type="text" name=""  '.$disabled_parent.' value="'.$p_parent.'">
 								</div>
 							</div>
 						</div>
@@ -389,7 +407,7 @@ function read_contents($conn, $topic, $parent='-') {
 			$sql = "SELECT * FROM docs WHERE parent = '$parent' GROUP BY title";
 			$res = $conn->query($sql);
 			while($row = $res->fetch_assoc()){
-				echo '<a class="_content_link" href="/docs/documentations/doc/?parent='.$parent.'&title='.$row["title"].'"><div class="_content_elm col-sm-6 col-md-4 col-lg-3">'.$row["title"].'</div></a>';
+				echo '<a class="_content_link" href="/docs/documentations/doc/?topic='.$_GET["topic"].'&parent='.$parent.'&title='.$row["title"].'"><div class="_content_elm col-sm-6 col-md-4 col-lg-3">'.$row["title"].'</div></a>';
 			}
 		}
 	}
