@@ -247,3 +247,7 @@ $(window).scroll(function() {
 		$("._upscroller").fadeOut(200);
 	}
 });
+
+function click_savecontent_btn() {
+	alert();
+}

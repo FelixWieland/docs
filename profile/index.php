@@ -41,7 +41,6 @@ if(!isset($_SESSION["username"])) {
 			 <div class="row">
 				 <div class="col-sd-12 col-md-12 col-lg-12 _profile_documentations">
 					 <?php
-
 					 	$sql = "SELECT * FROM docs_by_creator WHERE username = '$username'";
 						$res = $conn->query($sql);
 						while($row = $res->fetch_assoc()){
@@ -51,21 +50,16 @@ if(!isset($_SESSION["username"])) {
 								</ul>
 							';
 						}
-
 					  ?>
 				 </div>
 			 </div>
-
-
-
-			 </div>
-</div>
+			</div>
+		</div>
 		<?php
 			//read_topics($conn);
 			//read_contents($conn, "Programming");
 			createBottomWRAPPER();
 		 ?>
-
 	</body>
 	<?php
 		create_scripts();

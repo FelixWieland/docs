@@ -121,11 +121,13 @@ function create_menubar() {
 	$profile = "";
 	$logout = "";
 	$login = '<li id="_login-id">_Login</li>';
+	$api = '';
 
 	if(isset($_SESSION["username"])){
 		$profile = '<a href="/docs/profile/"><li>_Profile</li></a>';
 		$logout = '<a href="/docs/utility/logout.php"><li>_Logout</li></a>';
 		$login = '';
+		$api = '<a href="/docs/api/"><li>_API</li></a>';
 	}
 
 	echo '<div id="_menu-field-id" class="col-sm-12 col-md-8 col-lg-6 _menu-field">
@@ -134,6 +136,7 @@ function create_menubar() {
 						'.$login.'
 						'.$profile.'
 						'.$logout.'
+						'.$api.'
 					</ul>
 				</div>';
 }
