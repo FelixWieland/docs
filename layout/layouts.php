@@ -43,7 +43,7 @@ function create_layout($for="docs.place", $type="std", $description=" ", $emptys
 	if(isset($_SESSION["username"]) && $set_creator == " ") {
 		//$creator = '<a href="/docs/create/" class="_create_marker">_create</a>';
 	}
-	if(isset($_SESSION["username"]) && $set_creator == " " && isset($_GET["parent"]) && isset($_GET["topic"]) || isset($_GET["title"])) {
+	if(isset($_SESSION["username"]) && $set_creator == " " && isset($_GET["parent"]) && ( isset($_GET["topic"]) || isset($_GET["title"]) )) {
 
 		$ids = "";
 

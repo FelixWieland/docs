@@ -40,7 +40,7 @@ if($doc_exits) {
 	if($own_doc) {
 		//Own doc
 		// -> DELETE DOC THEN INSERT NEW
-		$sql = "UPDATE docs_by_creator SET lastchange_dat=current_date() WHERE parent='$parent' AND title='$title' AND username='$username';";
+		$sql = "UPDATE docs_by_creator SET lastchange_dat=current_date() WHERE pid='$pid' AND parent='$parent' AND title='$title' AND username='$username';";
 		$res = $conn->query($sql);
 
 		$sql = "DELETE FROM docs WHERE title='$title' AND parent='$parent';";
@@ -57,7 +57,7 @@ if($doc_exits) {
 	//insert doc
 	//INSERT IN DOC CREATION AND IN DOC
 
-	$sql = "INSERT INTO docs_by_creator (id, username, parent, title, description, creation_dat, lastchange_dat) VALUES (null, '$username', '$parent', '$title', '$description', current_date(), current_date());";
+	$sql = "INSERT INTO docs_by_creator (id, pid, username, parent, title, description, creation_dat, lastchange_dat) VALUES (null, '$pid', '$username', '$parent', '$title', '$description', current_date(), current_date());";
 	$res = $conn->query($sql);
 
 	insert_doc($conn, $title, $parent, $content, $pid);

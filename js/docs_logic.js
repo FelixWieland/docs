@@ -1,5 +1,9 @@
 var $_GET = {};
 
+$(document).ready(function () {
+	console.log($_GET);
+});
+
 if(document.location.toString().indexOf('?') !== -1) {
     var query = document.location
                    .toString()

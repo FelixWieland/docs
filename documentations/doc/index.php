@@ -16,7 +16,12 @@ $conn = connect_to_db();
 			$parent = $_GET["parent"];
 			$title = $_GET["title"];
 			$row = $conn->query("SELECT * FROM docs_by_creator WHERE title = '$title' AND parent = '$parent';")->fetch_assoc();
-			create_layout($parent, "content", "-", $row["description"]);
+			if($row["pid"] == "-1") {
+				create_layout($row["title"], "content", "-", $row["description"]);
+			} else {
+				create_layout($parent, "content", "-", $row["description"]);
+			}
+
 		 ?>
 		<div class="container well">
 			<?php

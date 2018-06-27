@@ -55,12 +55,14 @@
 
 ._profile_documentations a {
 	color: black;
-}
-
-._profile_documentations a:last-child {
 	float: right;
 	padding-right: 10px;
 	text-transform: uppercase;
+}
+
+._profile_documentations a:first-child {
+	float: none;
+	text-transform: none;
 }
 
 ._profile_documentations {

@@ -84,7 +84,7 @@
 	padding-left: 10px;
 	border-bottom: 1px solid black;
 	resize: none;
-	padding-right: 30px;	
+	padding-right: 30px;
 }
 
 ._create_pattern textarea:focus {
@@ -137,4 +137,9 @@
 
 ._create_choose div:hover {
 	cursor: pointer;
+}
+
+._create_choose form div input {
+	background-color: inherit !important;
+	border: none;
 }

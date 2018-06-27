@@ -22,7 +22,7 @@ $conn = connect_to_db();
 			 ?>
 
 		</div>
-		<div class="container-fluid well _margin_normal _parallax-wrapper _parallax-background-05">
+		<div class="container-fluid well _margin_normal _parallax-wrapper _parallax-background-0<?php echo rand(5,5); ?>">
 
 			<br><br><br><br><br><br><br>
 		</div>
@@ -41,7 +41,7 @@ $conn = connect_to_db();
 			</div>
 			<br><br><br><br><br><br><br>
 		</div>
-		<div class="container-fluid well _margin_normal _parallax-wrapper _parallax-background-04">
+		<div class="container-fluid well _margin_normal _parallax-wrapper _parallax-background-0<?php echo rand(5,5); ?>">
 			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		</div>
 		<div class="container well _margin_normal">

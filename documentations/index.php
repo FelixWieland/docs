@@ -31,6 +31,8 @@ $conn = connect_to_db();
 			$sql = "SELECT * FROM contents WHERE topic = '$topic' AND name = '$parent';";
 			$res = $conn->query($sql);
 			$row = $res->fetch_assoc();
+			$num = rand(1,5);
+
 		 ?>
 		 <?php if (mysqli_num_rows($res) != 0): ?>
 			 <div class="container well">
@@ -39,7 +41,7 @@ $conn = connect_to_db();
   				 <?php echo $row["description"]; ?>
   			 </p>
   			 </div>
-  			<div class="container-fluid well _parallax-wrapper _parallax-background-05"></div>
+  			<div class="container-fluid well _parallax-wrapper _parallax-background-0<?php echo rand(5,5); ?>"></div>
 		 <?php endif; ?>
 
 		<div class="container well">

@@ -41,12 +41,12 @@ if(!isset($_SESSION["username"])) {
 			 <div class="row">
 				 <div class="col-sd-12 col-md-12 col-lg-12 _profile_documentations">
 					 <?php
-					 	$sql = "SELECT * FROM docs_by_creator WHERE username = '$username'";
+					 	$sql = "SELECT docs_by_creator.pid, contents.topic, docs_by_creator.parent, docs_by_creator.title FROM docs_by_creator INNER JOIN contents ON docs_by_creator.pid = contents.id OR docs_by_creator.pid = '-1' WHERE docs_by_creator.username = '$username'";
 						$res = $conn->query($sql);
 						while($row = $res->fetch_assoc()){
 							echo '
 								<ul>
-						 			<li><a href="/docs/documentations/doc/?parent='.$row["parent"].'&title='.$row["title"].'">'.$row["title"].'</a><a href="/docs/create/?type=content&parent='.$row["parent"].'&title='.$row["title"].'">_Edit</a></li>
+						 			<li><a href="/docs/documentations/doc/?pid='.$row["pid"].'&topic='.$row["topic"].'&parent='.$row["parent"].'&title='.$row["title"].'">'.$row["title"].'</a><a href="/docs/create/?pid='.$row["pid"].'&topic='.$row["topic"].'&type=content&parent='.$row["parent"].'&title='.$row["title"].'">_Edit</a><a href="/docs/delete/?pid='.$row["pid"].'&topic='.$row["topic"].'&type=doc&parent='.$row["parent"].'&title='.$row["title"].'">_Delete</a></li>
 								</ul>
 							';
 						}
