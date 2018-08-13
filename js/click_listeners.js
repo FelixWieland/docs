@@ -13,3 +13,4 @@ $("#_create_save_doc-id").click(click_savedoc_btn);
 $("#_create_save_content-id").click(click_savecontent_btn);
 
 $(document).on("click", "._elm_remove", click_removeelement_btn);
+$("#_search-id").keydown(keydown_search_input);

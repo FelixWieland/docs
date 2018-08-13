@@ -118,7 +118,22 @@ function click_createtool_btn() {
 			"csharp",
 			"c",
 			"cpp",
-			"rust"
+			"rust",
+			"python",
+			"javascript",
+			"docker",
+			"css",
+			"jsx",
+			"sql",
+			"php",
+			"json",
+			"haskell",
+			"go",
+			"java",
+			"yaml",
+			"swift",
+			"dart",
+			"abap"
 		];
 		var dropdown = createDropdown(languages);
 		var pattern = '<div class="row"><div class="col-sd-12 col-md-12 col-lg-12"><div class="_create_pattern">' + dropdown + '<textarea id="demo" rows="8" cols="10" contenteditable="true"></textarea><button type="button" name="button" class="_elm_remove _large_elm_btn">X</button></div></div></div>';
@@ -286,19 +301,27 @@ function click_savecontent_btn() {
 	}
 
 	$.post("/docs/utility/handleContent.php", {	'topic': topic,
-																						'parent': parent,
-																						'pid': pid,
-																						'content': content,
-																						'header': header,
-																						'description': description
+																							'parent': parent,
+																							'pid': pid,
+																							'content': content,
+																							'header': header,
+																							'description': description
 																					}, function(data) {
     if(data.includes("%CREATED_CONTENT%")) {
 			//link to content
 			window.location.href = '/docs/documentations/?topic='+topic+'&id='+pid+'&parent='+parent
 		}
   });
+}
 
-
-
-
+function keydown_search_input() {
+	var search = $(this).find("input").first().val();
+	var topic = $_GET["topic"];
+	var id = $_GET["id"];
+	$.post("/docs/utility/search.php", {'search': search,
+																		  'topic': topic,
+																		  'id': id
+																		}, function(data) {
+    console.log(data);
+  });
 }

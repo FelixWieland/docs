@@ -34,6 +34,7 @@ function create_header($for="docs", $type="std") {
 function create_layout($for="docs.place", $type="std", $description=" ", $emptyset=" ", $set_creator=" ") {
 	//?type=content&parent=C-Sharp&title=MySQL-Connection
 	$creator = "";
+	$search = '<div id="_search-id" class="_search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span><input type="text" placeholder="Search..."></div>';
 	if($description==" ") {
 		$description = "Documentations about ".$for;
 	}
@@ -43,7 +44,7 @@ function create_layout($for="docs.place", $type="std", $description=" ", $emptys
 	if(isset($_SESSION["username"]) && $set_creator == " ") {
 		//$creator = '<a href="/docs/create/" class="_create_marker">_create</a>';
 	}
-	if(isset($_SESSION["username"]) && $set_creator == " " && isset($_GET["parent"]) && ( isset($_GET["topic"]) || isset($_GET["title"]) )) {
+	if(isset($_SESSION["username"]) && $set_creator == " " && isset($_GET["parent"]) && ( isset($_GET["topic"]) || isset($_GET["title"]) ) ) {
 
 		$ids = "";
 
@@ -78,7 +79,7 @@ function create_layout($for="docs.place", $type="std", $description=" ", $emptys
 							</div>
 						</div>
 						<div class="_second_navbar _bg_black">
-						'.$creator.'
+						'.$search.''.$creator.'
 						</div>';
 			break;
 		case 'content':
@@ -104,7 +105,7 @@ function create_layout($for="docs.place", $type="std", $description=" ", $emptys
 							</div>
 						</div>
 						<div class="_second_navbar _bg_black">
-							'.$creator.'
+							'.$search.''.$creator.'
 						</div>';
 			break;
 		default:
@@ -482,7 +483,26 @@ function build_updatedoc($res) { //This takes a documentation and create prefill
 			*/
 		}
 		else {
-			$languages = array("%MUSTER%", "csharp", "c", "cpp", "rust");
+			$languages = array("%MUSTER%",
+				"csharp",
+				"c",
+				"cpp",
+				"rust",
+				"python",
+				"javascript",
+				"docker",
+				"css",
+				"jsx",
+				"sql",
+				"php",
+				"json",
+				"haskell",
+				"go",
+				"java",
+				"yaml",
+				"swift",
+				"dart",
+				"abap");
 
 			foreach ($languages as $key => $value) {
 				if($value == "%MUSTER%"){
@@ -542,5 +562,4 @@ function create_contents_for($for="", $type="std")
 	}
 }
 */
-
  ?>

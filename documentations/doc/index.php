@@ -17,9 +17,9 @@ $conn = connect_to_db();
 			$title = $_GET["title"];
 			$row = $conn->query("SELECT * FROM docs_by_creator WHERE title = '$title' AND parent = '$parent';")->fetch_assoc();
 			if($row["pid"] == "-1") {
-				create_layout($row["title"], "content", "-", $row["description"]);
+				create_layout($row["title"], "content", "-", $row["description"], "set_no_creator");
 			} else {
-				create_layout($parent, "content", "-", $row["description"]);
+				create_layout($parent, "content", "-", $row["description"], "set_no_creator");
 			}
 
 		 ?>
