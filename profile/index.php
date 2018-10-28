@@ -43,6 +43,7 @@ if(!isset($_SESSION["username"])) {
 					 <?php
 					 	$sql = "SELECT docs_by_creator.pid, contents.topic, docs_by_creator.parent, docs_by_creator.title FROM docs_by_creator INNER JOIN contents ON docs_by_creator.pid = contents.id OR docs_by_creator.pid = '-1' WHERE docs_by_creator.username = '$username'";
 						$res = $conn->query($sql);
+						echo $sql;
 						while($row = $res->fetch_assoc()){
 							echo '
 								<ul>

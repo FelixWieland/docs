@@ -3,14 +3,12 @@ function connect_to_db()
 {
 	$conn = false;
 	try {
-		$conn = mysqli_connect("localhost", "root", "", "docs");
+		//db743985497
+		$conn = mysqli_connect("localhost", "root", "root", "db743985497", 8889);
 	} catch (\Exception $e) {
-		$conn = mysqli_connect();
-	}
-	if($conn == false){
-		$conn = mysqli_connect();
+		//$conn = mysqli_connect();
+		echo $e;
 	}
 	return $conn;
-
 }
  ?>

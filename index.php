@@ -4,7 +4,10 @@ require $_SERVER['DOCUMENT_ROOT'].'/docs/layout/layouts.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/docs/sql/connector.php';
 
 $conn = connect_to_db();
-
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+	print("test");
+} 
  ?>
 <!DOCTYPE html>
 <html>

@@ -6,7 +6,10 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/docs/sql/connector.php';
 header('Content-Type: text/html; charset=UTF-8');
 
 $conn = connect_to_db();
-
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+	print("test");
+} 
  ?>
 <!DOCTYPE html>
 <html>
@@ -49,7 +52,7 @@ $conn = connect_to_db();
 			<?php
 				//create_contents_for();
 				if($title != "-"){
-
+					
 				}
 				read_contents($conn, $_GET["topic"], $_GET["parent"]);
 			 ?>
